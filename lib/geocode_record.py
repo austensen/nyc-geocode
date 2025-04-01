@@ -1,5 +1,6 @@
 from geosupport import Geosupport,GeosupportError
 import usaddress
+from unidecode import unidecode
 
 from .placename_to_borocode import placename_to_borocode
 
@@ -18,7 +19,7 @@ def parse_address(addr):
     try:
         tags, _ = usaddress.tag(addr)
         house_number = ' '.join([v for k, v in tags.items() if k.startswith('AddressNumber')])
-        street_name = ' '.join([v for k, v in tags.items() if k.startswith('StreetName')])
+        street_name = unidecode(' '.join([v for k, v in tags.items() if k.startswith('StreetName')]))
         place_name = tags.get('PlaceName', '')
         borough_code = placename_to_borocode(place_name)
     except usaddress.RepeatedLabelError as e :
